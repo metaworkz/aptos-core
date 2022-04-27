@@ -16,6 +16,7 @@ use executor_types::{Error, StateComputeResult};
 use futures::channel::mpsc;
 use std::{collections::HashMap, sync::Arc};
 use termion::color::*;
+use aptos_types::epoch_state::EpochState;
 
 pub struct MockStateComputer {
     state_sync_client: mpsc::UnboundedSender<Payload>,
@@ -96,6 +97,9 @@ impl StateComputer for MockStateComputer {
             .expect("Fail to notify about sync");
         Ok(())
     }
+
+    fn new_epoch(&self, _: &EpochState) {
+    }
 }
 
 pub struct EmptyStateComputer;
@@ -121,6 +125,9 @@ impl StateComputer for EmptyStateComputer {
 
     async fn sync_to(&self, _commit: LedgerInfoWithSignatures) -> Result<(), StateSyncError> {
         Ok(())
+    }
+
+    fn new_epoch(&self, _: &EpochState) {
     }
 }
 
@@ -170,5 +177,8 @@ impl StateComputer for RandomComputeResultStateComputer {
 
     async fn sync_to(&self, _commit: LedgerInfoWithSignatures) -> Result<(), StateSyncError> {
         Ok(())
+    }
+
+    fn new_epoch(&self, _: &EpochState) {
     }
 }

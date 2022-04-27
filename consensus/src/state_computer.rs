@@ -19,6 +19,9 @@ use executor_types::{BlockExecutorTrait, Error as ExecutionError, StateComputeRe
 use fail::fail_point;
 use futures::{SinkExt, StreamExt};
 use std::{boxed::Box, sync::Arc};
+use aptos_infallible::Mutex;
+use aptos_types::account_address::AccountAddress;
+use aptos_types::epoch_state::EpochState;
 
 type NotificationType = (
     Box<dyn FnOnce() + Send + Sync>,
@@ -33,6 +36,8 @@ pub struct ExecutionProxy {
     mempool_notifier: Arc<dyn TxnManager>,
     state_sync_notifier: Arc<dyn ConsensusNotificationSender>,
     async_state_sync_notifier: channel::Sender<NotificationType>,
+    // TODO: is a mutex needed here? if not, what?
+    validators: Mutex<Vec<AccountAddress>>,
 }
 
 impl ExecutionProxy {
@@ -40,7 +45,7 @@ impl ExecutionProxy {
         executor: Box<dyn BlockExecutorTrait>,
         mempool_notifier: Arc<dyn TxnManager>,
         state_sync_notifier: Arc<dyn ConsensusNotificationSender>,
-        handle: &tokio::runtime::Handle,
+        handle: &tokio::runtime::Handle
     ) -> Self {
         let (tx, mut rx) =
             channel::new::<NotificationType>(10, &counters::PENDING_STATE_SYNC_NOTIFICATION);
@@ -62,6 +67,7 @@ impl ExecutionProxy {
             mempool_notifier,
             state_sync_notifier,
             async_state_sync_notifier: tx,
+            validators: Mutex::new(vec![]),
         }
     }
 }
@@ -90,7 +96,7 @@ impl StateComputer for ExecutionProxy {
         let compute_result = monitor!(
             "execute_block",
             self.executor.execute_block(
-                (block.id(), block.transactions_to_execute()),
+                (block.id(), block.transactions_to_execute(&self.validators.lock())),
                 parent_block_id
             )
         )?;
@@ -121,7 +127,7 @@ impl StateComputer for ExecutionProxy {
 
         for block in blocks {
             block_ids.push(block.id());
-            txns.extend(block.transactions_to_commit());
+            txns.extend(block.transactions_to_commit(&self.validators.lock()));
             reconfig_events.extend(block.reconfig_event());
         }
 
@@ -166,5 +172,12 @@ impl StateComputer for ExecutionProxy {
             let anyhow_error: anyhow::Error = error.into();
             anyhow_error.into()
         })
+    }
+
+    fn new_epoch(&self, epoch_state: &EpochState) {
+        *self.validators.lock() = epoch_state
+            .verifier
+            .get_ordered_account_addresses_iter()
+            .collect();
     }
 }

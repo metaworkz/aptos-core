@@ -131,9 +131,12 @@ impl TransactionBenchState {
         let new_block = BlockMetadata::new(
             HashValue::zero(),
             0,
+            0,
+            std::iter::once(false)
+                .chain(validator_set.payload().map(|_| false))
+                .collect(),
             1,
-            vec![],
-            *validator_set.payload().next().unwrap().account_address(),
+            1,
         );
 
         state

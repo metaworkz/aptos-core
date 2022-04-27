@@ -112,6 +112,24 @@ impl ActiveInactiveHeuristic {
             inactive_weight,
         }
     }
+
+    fn index_to_proposer<'a>(&self, candidates: &'a [Author], index: usize) -> Option<&'a Author> {
+        if index == 0 {
+            None
+        } else {
+            candidates.get(index - 1)
+        }
+    }
+
+    // TODO: is unwrap safe? what to do here instead? filter None, then unwrap?
+    fn bitmap_to_voters<'a>(&self, candidates: &'a [Author], bitmap: &Vec<bool>) -> Vec<&'a Author> {
+        bitmap
+            .iter()
+            .enumerate()
+            .filter(|&(_, &voted)| voted == true)
+            .map(|(i, _)| candidates.get(i - 1).unwrap())
+            .collect()
+    }
 }
 
 impl ReputationHeuristic for ActiveInactiveHeuristic {
@@ -120,19 +138,24 @@ impl ReputationHeuristic for ActiveInactiveHeuristic {
         let mut committed_votes: usize = 0;
 
         let set = history.iter().fold(HashSet::new(), |mut set, meta| {
-            set.insert(meta.proposer());
-            for vote in meta.votes() {
-                set.insert(vote);
-                if vote == self.author {
+            let proposer = self.index_to_proposer(candidates, meta.proposer() as usize);
+            let voters = self.bitmap_to_voters(candidates, meta.previous_block_votes());
+
+            if let Some(node) = proposer {
+                set.insert(node);
+                if *node == self.author {
+                    committed_proposals = committed_proposals
+                        .checked_add(1)
+                        .expect("Should not overflow the number of committed proposals in a window");
+                }
+            }
+            for voter in voters {
+                set.insert(voter);
+                if *voter == self.author {
                     committed_votes = committed_votes
                         .checked_add(1)
                         .expect("Should not overflow the number of committed votes in a window");
                 }
-            }
-            if meta.proposer() == self.author {
-                committed_proposals = committed_proposals
-                    .checked_add(1)
-                    .expect("Should not overflow the number of committed proposals in a window");
             }
             set
         });

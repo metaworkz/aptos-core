@@ -256,6 +256,7 @@ impl From<(&BlockMetadata, TransactionInfo)> for Transaction {
         Transaction::BlockMetadataTransaction(BlockMetadataTransaction {
             info,
             id: txn.id().into(),
+            epoch: txn.epoch().into(),
             round: txn.round().into(),
             previous_block_votes: txn
                 .previous_block_votes()
@@ -345,9 +346,10 @@ pub struct BlockMetadataTransaction {
     #[serde(flatten)]
     pub info: TransactionInfo,
     pub id: HashValue,
+    pub epoch: U64,
     pub round: U64,
-    pub previous_block_votes: Vec<Address>,
-    pub proposer: Address,
+    pub previous_block_votes: Vec<bool>,
+    pub proposer: U64,
     pub timestamp: U64,
 }
 

@@ -254,8 +254,7 @@ mod tests {
             bootstrap_genesis_and_set_subscription(true);
 
         // Create a dummy prologue transaction that will bump the timer, and update the validator set
-        let validator_account = validators[0].data.address;
-        let dummy_txn = create_dummy_transaction(1, validator_account);
+        let dummy_txn = create_dummy_transaction(1);
         let reconfig_txn = create_new_update_aptos_version_transaction(0);
 
         // Execute and commit the block
@@ -278,8 +277,7 @@ mod tests {
             bootstrap_genesis_and_set_subscription(true);
 
         // Create a dummy prologue transaction that will bump the timer, and update the Aptos version
-        let validator_account = validators[0].data.address;
-        let dummy_txn = create_dummy_transaction(1, validator_account);
+        let dummy_txn = create_dummy_transaction(1);
         let reconfig_txn = create_new_update_aptos_version_transaction(0);
 
         // Execute and commit the reconfig block
@@ -300,7 +298,7 @@ mod tests {
 
         // Create a dummy prologue transaction that will bump the timer, and update the Aptos version
         let validator_account = validators[0].data.address;
-        let dummy_txn = create_dummy_transaction(1, validator_account);
+        let dummy_txn = create_dummy_transaction(1);
         let reconfig_txn = create_new_update_aptos_version_transaction(0);
 
         // Give the validator some money so it can send a rotation tx and rotate the validator's consensus key.
@@ -403,8 +401,7 @@ mod tests {
             bootstrap_genesis_and_set_subscription(true);
 
         // Create a dummy prologue transaction that will bump the timer, and update the Aptos version
-        let validator_account = validators[0].data.address;
-        let dummy_txn = create_dummy_transaction(1, validator_account);
+        let dummy_txn = create_dummy_transaction(1);
         let allowlist_txn = create_new_update_aptos_version_transaction(0);
 
         // Execute and commit the reconfig block
@@ -428,7 +425,7 @@ mod tests {
 
         // Create a dummy prologue transaction that will bump the timer and update the Aptos version
         let validator_account = validators[0].data.address;
-        let dummy_txn_1 = create_dummy_transaction(1, validator_account);
+        let dummy_txn_1 = create_dummy_transaction(1);
         let reconfig_txn = create_new_update_aptos_version_transaction(0);
 
         // Execute and commit the reconfig block
@@ -438,7 +435,7 @@ mod tests {
         // Give the validator some money so it can send a rotation tx, create another dummy prologue
         // to bump the timer and rotate the validator's consensus key.
         let money_txn = create_transfer_to_validator_transaction(validator_account, 1);
-        let dummy_txn_2 = create_dummy_transaction(2, validator_account);
+        let dummy_txn_2 = create_dummy_transaction(2);
         let rotation_txn = create_consensus_key_rotation_transaction(&validators[0], 0);
 
         // Execute and commit the reconfig block
@@ -485,7 +482,7 @@ mod tests {
 
         // Create a dummy prologue transaction that will bump the timer and update the Aptos version
         let validator_account = validators[0].data.address;
-        let dummy_txn = create_dummy_transaction(1, validator_account);
+        let dummy_txn = create_dummy_transaction(1);
         let reconfig_txn = create_new_update_aptos_version_transaction(0);
 
         // Execute and commit the reconfig block
@@ -501,7 +498,7 @@ mod tests {
         // Give the validator some money so it can send a rotation tx, create another dummy prologue
         // to bump the timer and rotate the validator's consensus key.
         let money_txn = create_transfer_to_validator_transaction(validator_account, 1);
-        let dummy_txn = create_dummy_transaction(2, validator_account);
+        let dummy_txn = create_dummy_transaction(2);
         let rotation_txn = create_consensus_key_rotation_transaction(&validators[0], 0);
 
         // Execute and commit the reconfig block
@@ -528,8 +525,7 @@ mod tests {
             .get::<OnChainConsensusConfig>());
 
         // Create a dummy prologue transaction that will bump the timer, and update the Aptos version
-        let validator_account = validators[0].data.address;
-        let dummy_txn = create_dummy_transaction(1, validator_account);
+        let dummy_txn = create_dummy_transaction(1);
         let update_txn = create_new_update_consensus_config_transaction(0);
 
         // Execute and commit the reconfig block
@@ -595,8 +591,7 @@ mod tests {
         assert_err!(payload.get::<TestOnChainConfig>());
 
         // Create a dummy prologue transaction that will bump the timer, and update the Aptos version
-        let validator_account = validators[0].data.address;
-        let dummy_txn = create_dummy_transaction(1, validator_account);
+        let dummy_txn = create_dummy_transaction(1);
         let allowlist_txn = create_new_update_aptos_version_transaction(0);
 
         // Execute and commit the reconfig block
@@ -703,13 +698,14 @@ mod tests {
     }
 
     /// Creates a dummy transaction (useful for bumping the timer).
-    fn create_dummy_transaction(index: u8, validator_account: AccountAddress) -> Transaction {
+    fn create_dummy_transaction(index: u8) -> Transaction {
         Transaction::BlockMetadata(BlockMetadata::new(
             gen_block_id(index),
+            0,
             index as u64,
+            vec![false, false],
+            1,
             (index as u64 + 1) * 100000010,
-            vec![],
-            validator_account,
         ))
     }
 

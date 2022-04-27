@@ -387,10 +387,11 @@ mod tests {
     fn create_block_metadata_transaction() -> Transaction {
         Transaction::BlockMetadata(BlockMetadata::new(
             HashValue::new([0; HashValue::LENGTH]),
-            1,
+            0,
             300000001,
-            vec![],
-            AccountAddress::random(),
+            vec![false, false],
+            1,
+            1,
         ))
     }
 

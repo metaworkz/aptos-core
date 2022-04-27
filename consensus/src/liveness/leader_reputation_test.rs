@@ -35,8 +35,8 @@ impl MetadataBackend for MockHistory {
     }
 }
 
-fn create_block(proposer: Author, voters: Vec<&ValidatorSigner>) -> NewBlockEvent {
-    NewBlockEvent::new(0, proposer, voters.iter().map(|v| v.author()).collect(), 0)
+fn create_block(voters: Vec<bool>, proposer: u64) -> NewBlockEvent {
+    NewBlockEvent::new(0, 0, voters, proposer, 0)
 }
 
 #[test]
@@ -61,8 +61,8 @@ fn test_simple_heuristic() {
     let weights = heuristic.get_weights(
         &proposers,
         &[
-            create_block(proposers[0], vec![&signers[1], &signers[2]]),
-            create_block(proposers[0], vec![&signers[3]]),
+            create_block(vec![false, false, true, true, false], 1),
+            create_block(vec![false, false, false, false, true], 1),
         ],
     );
     assert_eq!(weights.len(), proposers.len());
@@ -88,8 +88,8 @@ fn test_api() {
         signers.push(signer);
     }
     let history = vec![
-        create_block(proposers[0], vec![&signers[1], &signers[2]]),
-        create_block(proposers[0], vec![&signers[3]]),
+        create_block(vec![false, false, true, true, false], 1),
+        create_block(vec![false, false, false, false, true], 1),
     ];
     let leader_reputation = LeaderReputation::new(
         proposers.clone(),

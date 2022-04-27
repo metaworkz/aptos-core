@@ -21,6 +21,7 @@ use futures::{
     SinkExt,
 };
 use std::{boxed::Box, sync::Arc};
+use aptos_types::epoch_state::EpochState;
 
 /// Ordering-only execution proxy
 /// implements StateComputer traits.
@@ -115,5 +116,9 @@ impl StateComputer for OrderingStateComputer {
         // when it's reset but sync fails.
         self.state_computer_for_sync.sync_to(target).await?;
         Ok(())
+    }
+
+    fn new_epoch(&self, epoch_state: &EpochState) {
+        self.state_computer_for_sync.new_epoch(epoch_state);
     }
 }
