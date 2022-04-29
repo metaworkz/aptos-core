@@ -29,13 +29,12 @@ BlockMetadata:
   STRUCT:
     - id:
         TYPENAME: HashValue
+    - epoch: U64
     - round: U64
-    - timestamp_usecs: U64
     - previous_block_votes:
-        SEQ:
-          TYPENAME: AccountAddress
-    - proposer:
-        TYPENAME: AccountAddress
+        SEQ: BOOL
+    - proposer: U64
+    - timestamp_usecs: U64
 ChainId:
   NEWTYPESTRUCT: U8
 ChangeSet:

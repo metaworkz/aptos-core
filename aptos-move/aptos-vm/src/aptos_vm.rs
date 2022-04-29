@@ -622,9 +622,9 @@ impl AptosVM {
             MoveValue::Signer(txn_data.sender),
             MoveValue::U64(epoch),
             MoveValue::U64(round),
-            MoveValue::U64(timestamp),
             MoveValue::Vector(previous_vote.into_iter().map(MoveValue::Bool).collect()),
             MoveValue::U64(proposer),
+            MoveValue::U64(timestamp),
         ]);
         session
             .execute_function_bypass_visibility(

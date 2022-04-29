@@ -5,7 +5,7 @@ module AptosFramework::Block {
     use AptosFramework::Timestamp;
     use AptosFramework::SystemAddresses;
     use AptosFramework::Reconfiguration;
-    use AptosFramework::Stake;
+    // use AptosFramework::Stake;
 
     struct BlockMetadata has key {
         /// Height of the current block
@@ -19,10 +19,10 @@ module AptosFramework::Block {
     struct NewBlockEvent has drop, store {
         epoch: u64,
         round: u64,
+        previous_block_votes: vector<bool>,
+        proposer: u64,
         /// On-chain time during  he block at the given height
         time_microseconds: u64,
-        previous_block_votes: vector<bool>,
-        proposer: address,
     }
 
     /// The `BlockMetadata` resource is in an invalid state
@@ -59,19 +59,20 @@ module AptosFramework::Block {
         vm: signer,
         epoch: u64,
         round: u64,
-        timestamp: u64,
         previous_block_votes: vector<bool>,
-        proposer: address
+        proposer: u64,
+        timestamp: u64
     ) acquires BlockMetadata {
         Timestamp::assert_operating();
         // Operational constraint: can only be invoked by the VM.
         SystemAddresses::assert_vm(&vm);
 
+        // TODO: what's the alternative way to authorize?
         // Authorization
-        assert!(
-            proposer == @VMReserved || Stake::is_current_validator(proposer),
-            Errors::requires_address(EVM_OR_VALIDATOR)
-        );
+//        assert!(
+//            proposer == @VMReserved || Stake::is_current_validator(proposer),
+//            Errors::requires_address(EVM_OR_VALIDATOR)
+//        );
 
         let block_metadata_ref = borrow_global_mut<BlockMetadata>(@CoreResources);
         Timestamp::update_global_time(&vm, proposer, timestamp);
@@ -81,9 +82,9 @@ module AptosFramework::Block {
             NewBlockEvent {
                 epoch,
                 round,
-                time_microseconds: timestamp,
                 previous_block_votes,
                 proposer,
+                time_microseconds: timestamp,
             }
         );
 

@@ -181,9 +181,9 @@ impl<'a, R: MoveResolverExt> ReadWriteSetAnalysis<'a, R> {
                     MoveValue::Signer(account_config::reserved_vm_address()),
                     MoveValue::U64(epoch),
                     MoveValue::U64(round),
-                    MoveValue::U64(timestamp),
                     MoveValue::Vector(previous_vote.into_iter().map(MoveValue::Bool).collect()),
                     MoveValue::U64(proposer),
+                    MoveValue::U64(timestamp),
                 ]);
                 let metadata_access = self.get_partially_concretized_summary(
                     &BLOCK_MODULE,

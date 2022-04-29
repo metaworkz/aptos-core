@@ -61,7 +61,7 @@ module AptosFramework::Timestamp {
     /// Updates the wall clock time by consensus. Requires VM privilege and will be invoked during block prologue.
     public fun update_global_time(
         account: &signer,
-        proposer: address,
+        proposer: u64,
         timestamp: u64
     ) acquires CurrentTimeMicroseconds {
         assert_operating();
@@ -70,7 +70,7 @@ module AptosFramework::Timestamp {
 
         let global_timer = borrow_global_mut<CurrentTimeMicroseconds>(@CoreResources);
         let now = global_timer.microseconds;
-        if (proposer == @VMReserved) {
+        if (proposer == 0) {
             // NIL block with null address as proposer. Timestamp must be equal.
             assert!(now == timestamp, Errors::invalid_argument(ETIMESTAMP));
         } else {
@@ -93,7 +93,7 @@ module AptosFramework::Timestamp {
 
         /// Conditions we only check for the implementation, but do not pass to the caller.
         aborts_if [concrete]
-            (if (proposer == @VMReserved) {
+            (if (proposer == 0) {
                 now != timestamp
              } else  {
                 now >= timestamp
