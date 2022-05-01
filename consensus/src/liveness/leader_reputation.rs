@@ -136,29 +136,33 @@ impl ReputationHeuristic for ActiveInactiveHeuristic {
     fn get_weights(&self, candidates: &[Author], history: &[NewBlockEvent]) -> Vec<u64> {
         let mut committed_proposals: usize = 0;
         let mut committed_votes: usize = 0;
+        let mut current_epoch: Option<u64> = None;
 
-        let set = history.iter().fold(HashSet::new(), |mut set, meta| {
-            let proposer = self.index_to_proposer(candidates, meta.proposer() as usize);
-            let voters = self.bitmap_to_voters(candidates, meta.previous_block_votes());
+        let set = history
+            .iter()
+            .filter(|&meta| &meta.epoch() == current_epoch.get_or_insert(meta.epoch()))
+            .fold(HashSet::new(), |mut set, meta| {
+                let proposer = self.index_to_proposer(candidates, meta.proposer() as usize);
+                let voters = self.bitmap_to_voters(candidates, meta.previous_block_votes());
 
-            if let Some(node) = proposer {
-                set.insert(node);
-                if *node == self.author {
-                    committed_proposals = committed_proposals
-                        .checked_add(1)
-                        .expect("Should not overflow the number of committed proposals in a window");
+                if let Some(node) = proposer {
+                    set.insert(node);
+                    if *node == self.author {
+                        committed_proposals = committed_proposals
+                            .checked_add(1)
+                            .expect("Should not overflow the number of committed proposals in a window");
+                    }
                 }
-            }
-            for voter in voters {
-                set.insert(voter);
-                if *voter == self.author {
-                    committed_votes = committed_votes
-                        .checked_add(1)
-                        .expect("Should not overflow the number of committed votes in a window");
+                for voter in voters {
+                    set.insert(voter);
+                    if *voter == self.author {
+                        committed_votes = committed_votes
+                            .checked_add(1)
+                            .expect("Should not overflow the number of committed votes in a window");
+                    }
                 }
-            }
-            set
-        });
+                set
+            });
 
         COMMITTED_PROPOSALS_IN_WINDOW.set(committed_proposals as i64);
         COMMITTED_VOTES_IN_WINDOW.set(committed_votes as i64);
