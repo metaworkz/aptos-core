@@ -327,7 +327,7 @@ impl BlockMetadataTransaction {
             round: *tx.round.inner() as i64,
             // TODO: dummy/bad values for now. Need to decide how to support this
             previous_block_votes: serde_json::to_value(&tx.previous_block_votes).unwrap(),
-            proposer: tx.proposer.inner().to_string(),
+            proposer: serde_json::to_value(&tx.proposer).unwrap().to_string(),
             // time is in milliseconds, but chronos wants seconds
             timestamp: parse_timestamp(tx.timestamp, tx.info.version),
             inserted_at: chrono::Utc::now().naive_utc(),

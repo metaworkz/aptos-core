@@ -10,7 +10,7 @@ use crate::liveness::{
 use aptos_types::{block_metadata::NewBlockEvent, validator_signer::ValidatorSigner};
 use consensus_types::{
     block::{block_test_utils::certificate_for_genesis, Block},
-    common::{Author, Round},
+    common::Round,
 };
 
 struct MockHistory {
@@ -35,7 +35,7 @@ impl MetadataBackend for MockHistory {
     }
 }
 
-fn create_block(voters: Vec<bool>, proposer: u64) -> NewBlockEvent {
+fn create_block(voters: Vec<bool>, proposer: Option<u64>) -> NewBlockEvent {
     NewBlockEvent::new(0, 0, voters, proposer, 0)
 }
 
@@ -61,8 +61,8 @@ fn test_simple_heuristic() {
     let weights = heuristic.get_weights(
         &proposers,
         &[
-            create_block(vec![false, false, true, true, false], 1),
-            create_block(vec![false, false, false, false, true], 1),
+            create_block(vec![false, true, true, false], Some(0)),
+            create_block(vec![false, false, false, true], Some(0)),
         ],
     );
     assert_eq!(weights.len(), proposers.len());
@@ -88,8 +88,8 @@ fn test_api() {
         signers.push(signer);
     }
     let history = vec![
-        create_block(vec![false, false, true, true, false], 1),
-        create_block(vec![false, false, false, false, true], 1),
+        create_block(vec![false, true, true, false], Some(0)),
+        create_block(vec![false, false, false, true], Some(0)),
     ];
     let leader_reputation = LeaderReputation::new(
         proposers.clone(),

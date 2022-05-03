@@ -623,7 +623,7 @@ impl AptosVM {
             MoveValue::U64(epoch),
             MoveValue::U64(round),
             MoveValue::Vector(previous_vote.into_iter().map(MoveValue::Bool).collect()),
-            MoveValue::U64(proposer),
+            MoveValue::Vector(proposer.into_iter().map(MoveValue::U64).collect()),
             MoveValue::U64(timestamp),
         ]);
         session

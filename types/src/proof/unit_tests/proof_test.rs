@@ -548,8 +548,8 @@ fn test_transaction_list_with_proof() {
         HashValue::random(),
         0,
         0,
-        vec![false, false],
-        1,
+        vec![false],
+        Some(0),
         0,
     ))];
 
@@ -619,8 +619,8 @@ fn test_transaction_and_output_list_with_proof() {
         HashValue::random(),
         0,
         0,
-        vec![false, false],
-        1,
+        vec![false],
+        Some(0),
         0,
     ));
     let event = create_event();

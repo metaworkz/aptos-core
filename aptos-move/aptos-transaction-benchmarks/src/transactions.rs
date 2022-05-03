@@ -132,10 +132,8 @@ impl TransactionBenchState {
             HashValue::zero(),
             0,
             0,
-            std::iter::once(false)
-                .chain(validator_set.payload().map(|_| false))
-                .collect(),
-            1,
+            validator_set.payload().map(|_| false).collect(),
+            Some(0),
             1,
         );
 

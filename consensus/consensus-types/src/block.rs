@@ -323,25 +323,19 @@ impl Block {
 
     // TODO: as util function that can be tested with the reverse operation.
     // TODO: also see functions in leader_reputation
-    // A bitmap of previous blocks, starting at 1
     fn voters_to_bitmap(&self, validators: &Vec<AccountAddress>, voters: HashSet<&AccountAddress>) -> Vec<bool> {
-        std::iter::once(false)
-            .chain(
-                validators
-                    .iter()
-                    .map(|address| voters.contains(address))
-            )
+        validators
+            .iter()
+            .map(|address| voters.contains(address))
+
             .collect::<Vec<_>>()
     }
 
     // TODO: as util function that can be tested with the reverse operation
     // TODO: also see functions in leader_reputation
-    // For nil block, we use 0
-    fn proposer_to_index(&self, validators: &Vec<AccountAddress>, proposer: Option<AccountAddress>) -> u64 {
-        (match proposer {
-            Some(address) => validators.iter().find_position(|a| **a == address).unwrap_or((0, &AccountAddress::ZERO)).0,
-            None => 0,
-        }) as u64
+    fn proposer_to_index(&self, validators: &Vec<AccountAddress>, proposer: Option<AccountAddress>) -> Option<u64> {
+        let address = proposer?;
+        Some(validators.iter().find_position(|a| **a == address).unwrap().0 as u64)
     }
 }
 

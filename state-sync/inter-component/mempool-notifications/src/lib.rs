@@ -389,8 +389,8 @@ mod tests {
             HashValue::new([0; HashValue::LENGTH]),
             0,
             300000001,
-            vec![false, false],
-            1,
+            vec![false],
+            Some(0),
             1,
         ))
     }

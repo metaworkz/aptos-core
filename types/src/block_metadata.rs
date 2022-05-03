@@ -31,7 +31,7 @@ pub struct BlockMetadata {
     epoch: u64,
     round: u64,
     previous_block_votes: Vec<bool>,
-    proposer: u64,
+    proposer: Option<u64>,
     timestamp_usecs: u64,
 }
 
@@ -41,7 +41,7 @@ impl BlockMetadata {
         epoch: u64,
         round: u64,
         previous_block_votes: Vec<bool>,
-        proposer: u64,
+        proposer: Option<u64>,
         timestamp_usecs: u64,
     ) -> Self {
         Self {
@@ -58,7 +58,7 @@ impl BlockMetadata {
         self.id
     }
 
-    pub fn into_inner(self) -> (u64, u64, u64, Vec<bool>, u64) {
+    pub fn into_inner(self) -> (u64, u64, u64, Vec<bool>, Option<u64>) {
         (
             self.epoch,
             self.round,
@@ -72,7 +72,7 @@ impl BlockMetadata {
         self.timestamp_usecs
     }
 
-    pub fn proposer(&self) -> u64 {
+    pub fn proposer(&self) -> Option<u64> {
         self.proposer
     }
 
@@ -129,7 +129,7 @@ pub struct NewBlockEvent {
     epoch: u64,
     round: u64,
     previous_block_votes: Vec<bool>,
-    proposer: u64,
+    proposer: Option<u64>,
     timestamp: u64,
 }
 
@@ -138,7 +138,7 @@ impl NewBlockEvent {
         epoch: u64,
         round: u64,
         previous_block_votes: Vec<bool>,
-        proposer: u64,
+        proposer: Option<u64>,
         timestamp: u64,
     ) -> Self {
         Self {
@@ -162,7 +162,7 @@ impl NewBlockEvent {
         &self.previous_block_votes
     }
 
-    pub fn proposer(&self) -> u64 {
+    pub fn proposer(&self) -> Option<u64> {
         self.proposer
     }
 }

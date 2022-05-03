@@ -13,6 +13,7 @@ module AptosFramework::Timestamp {
     use AptosFramework::SystemAddresses;
     use Std::Signer;
     use Std::Errors;
+    use Std::Vector;
 
     friend AptosFramework::Genesis;
 
@@ -61,7 +62,7 @@ module AptosFramework::Timestamp {
     /// Updates the wall clock time by consensus. Requires VM privilege and will be invoked during block prologue.
     public fun update_global_time(
         account: &signer,
-        proposer: u64,
+        proposer: vector<u64>,
         timestamp: u64
     ) acquires CurrentTimeMicroseconds {
         assert_operating();
@@ -70,7 +71,7 @@ module AptosFramework::Timestamp {
 
         let global_timer = borrow_global_mut<CurrentTimeMicroseconds>(@CoreResources);
         let now = global_timer.microseconds;
-        if (proposer == 0) {
+        if (Vector::length(&proposer) == 0) {
             // NIL block with null address as proposer. Timestamp must be equal.
             assert!(now == timestamp, Errors::invalid_argument(ETIMESTAMP));
         } else {

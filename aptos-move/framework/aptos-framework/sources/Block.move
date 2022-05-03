@@ -20,7 +20,7 @@ module AptosFramework::Block {
         epoch: u64,
         round: u64,
         previous_block_votes: vector<bool>,
-        proposer: u64,
+        proposer: vector<u64>,
         /// On-chain time during  he block at the given height
         time_microseconds: u64,
     }
@@ -60,7 +60,7 @@ module AptosFramework::Block {
         epoch: u64,
         round: u64,
         previous_block_votes: vector<bool>,
-        proposer: u64,
+        proposer: vector<u64>,
         timestamp: u64
     ) acquires BlockMetadata {
         Timestamp::assert_operating();

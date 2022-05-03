@@ -62,7 +62,8 @@ BlockMetadata:
     - round: U64
     - previous_block_votes:
         SEQ: BOOL
-    - proposer: U64
+    - proposer:
+        OPTION: U64
     - timestamp_usecs: U64
 BlockRetrievalRequest:
   STRUCT:

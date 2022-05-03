@@ -522,9 +522,9 @@ impl<'env> TraceReplayer<'env> {
             MoveValue::Signer(signer),
             MoveValue::U64(epoch),
             MoveValue::U64(round),
-            MoveValue::U64(timestamp),
             MoveValue::Vector(previous_votes.into_iter().map(MoveValue::Bool).collect()),
-            MoveValue::U64(proposer),
+            MoveValue::Vector(proposer.into_iter().map(MoveValue::U64).collect()),
+            MoveValue::U64(timestamp),
         ]
         .into_iter()
         .map(|v| v.simple_serialize().unwrap())

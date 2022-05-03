@@ -925,8 +925,8 @@ impl Arbitrary for BlockMetadata {
             any::<HashValue>(),
             any::<u64>(),
             any::<u64>(),
-            prop::collection::vec(any::<bool>(), num_validators_range + 1),
-            any::<u64>(),
+            prop::collection::vec(any::<bool>(), num_validators_range),
+            any::<Option<u64>>(),
             any::<u64>(),
         )
             .prop_map(|(id, epoch, round, previous_block_votes, proposer, timestamp)| {

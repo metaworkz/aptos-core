@@ -2,13 +2,13 @@
   {
     "type": "block_metadata_transaction",
     "version": "1",
-    "hash": "0x0e0cb6fdbb86c985d70fab0d97b0b267a0166fa573f9a29925e65b24ccbf0919",
-    "state_root_hash": "0x6308baeb444994e614cb6c595f98fa2175506326125b5f881cac6e8d2b981252",
-    "event_root_hash": "0x56067dfe53fddd2a8e108821c8d23709eb838e15b31cf18319797115b10e8bb2",
+    "hash": "0xa9f1028edda2ff85f9e52eb2f3bb4244ceb7affe5f2a9de7aa2fdcea26313eab",
+    "state_root_hash": "0xf1fc57ba15d2a62d49020f8e71726442b8f71a0cf3a52eab4013947bd35a10c0",
+    "event_root_hash": "0xc16fe7449588cd3b6bb09fc530c3ebc2b56f45523c7e1485933604f8c25b6d74",
     "gas_used": "0",
     "success": true,
     "vm_status": "Executed successfully",
-    "accumulator_root_hash": "0xbdb8a77a17ae759877451c5411bd4fc520d863b6edb5ea1b24262d344ff332b1",
+    "accumulator_root_hash": "0x2ef8ccb41e3b57faca890d3859744820f2079b5aef49635b6791d320886edec3",
     "changes": [
       {
         "type": "write_resource",
@@ -50,22 +50,23 @@
     "epoch": "0",
     "round": "1",
     "previous_block_votes": [
-      false,
       false
     ],
-    "proposer": "1",
+    "proposer": [
+      "0"
+    ],
     "timestamp": "1"
   },
   {
     "type": "user_transaction",
     "version": "2",
     "hash": "0x18073cb2536317833aa630d30062383a1f00221dd3604bbce19cd262813e6c36",
-    "state_root_hash": "0x2b1f73c16b539e4ba777ba5f308fa286761cbb1c74b31b3bfd179d56005c16af",
+    "state_root_hash": "0xb374ba27b22cf043253601704be6f018e113f4086ca69899f6a43aedb551c0d8",
     "event_root_hash": "0x414343554d554c41544f525f504c414345484f4c4445525f4841534800000000",
     "gas_used": "92",
     "success": true,
     "vm_status": "Executed successfully",
-    "accumulator_root_hash": "0xa08f2a9f304b670938cead89f11a3a8e6ba40356b556dbe494b99afe4bbc81eb",
+    "accumulator_root_hash": "0x7397237a7333f742b8cc19b79c26c319297ac9babe69af39e65d28880d6da41d",
     "changes": [
       {
         "type": "write_resource",

@@ -703,8 +703,8 @@ mod tests {
             gen_block_id(index),
             0,
             index as u64,
-            vec![false, false],
-            1,
+            vec![false],
+            Some(0),
             (index as u64 + 1) * 100000010,
         ))
     }

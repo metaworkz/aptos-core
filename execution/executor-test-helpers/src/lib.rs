@@ -11,7 +11,6 @@ use aptos_crypto::{
 use aptos_types::{
     account_address::AccountAddress,
     block_info::BlockInfo,
-    block_metadata::BlockMetadata,
     ledger_info::{LedgerInfo, LedgerInfoWithSignatures},
     test_helpers::transaction_test_helpers::get_test_signed_txn,
     transaction::{Transaction, TransactionPayload},

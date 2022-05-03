@@ -113,12 +113,9 @@ impl ActiveInactiveHeuristic {
         }
     }
 
-    fn index_to_proposer<'a>(&self, candidates: &'a [Author], index: usize) -> Option<&'a Author> {
-        if index == 0 {
-            None
-        } else {
-            candidates.get(index - 1)
-        }
+    fn index_to_proposer<'a>(&self, candidates: &'a [Author], index: Option<u64>) -> Option<&'a Author> {
+        let index = index? as usize;
+        candidates.get(index)
     }
 
     // TODO: is unwrap safe? what to do here instead? filter None, then unwrap?
@@ -127,7 +124,7 @@ impl ActiveInactiveHeuristic {
             .iter()
             .enumerate()
             .filter(|&(_, &voted)| voted == true)
-            .map(|(i, _)| candidates.get(i - 1).unwrap())
+            .map(|(i, _)| candidates.get(i).unwrap())
             .collect()
     }
 }
@@ -142,7 +139,7 @@ impl ReputationHeuristic for ActiveInactiveHeuristic {
             .iter()
             .filter(|&meta| &meta.epoch() == current_epoch.get_or_insert(meta.epoch()))
             .fold(HashSet::new(), |mut set, meta| {
-                let proposer = self.index_to_proposer(candidates, meta.proposer() as usize);
+                let proposer = self.index_to_proposer(candidates, meta.proposer());
                 let voters = self.bitmap_to_voters(candidates, meta.previous_block_votes());
 
                 if let Some(node) = proposer {

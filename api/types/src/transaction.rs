@@ -264,7 +264,12 @@ impl From<(&BlockMetadata, TransactionInfo)> for Transaction {
                 .iter()
                 .map(|a| (*a).into())
                 .collect(),
-            proposer: txn.proposer().into(),
+            proposer: txn
+                .proposer()
+                .clone()
+                .iter()
+                .map(|a| (*a).into())
+                .collect(),
             timestamp: txn.timestamp_usec().into(),
         })
     }
@@ -349,7 +354,8 @@ pub struct BlockMetadataTransaction {
     pub epoch: U64,
     pub round: U64,
     pub previous_block_votes: Vec<bool>,
-    pub proposer: U64,
+    // TODO: Option or Vec here? Where is this struct really used?
+    pub proposer: Vec<U64>,
     pub timestamp: U64,
 }
 
