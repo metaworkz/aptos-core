@@ -52,7 +52,7 @@ resource "helm_release" "fullnode" {
         "vke.vultr.com/node-pool" = "aptos-fullnode"
       }
       storage = {
-        class = kubernetes_storage_class.ssd.metadata[0].name
+        class = "block.csi.vultr.com"
       }
       service = {
         type = "LoadBalancer"
