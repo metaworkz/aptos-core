@@ -41,7 +41,7 @@ resource "helm_release" "fullnode" {
         "vke.vultr.com/node-pool" = "aptos-fullnode"
       }
       storage = {
-        class = "vultr-block-storage"
+        class = var.block_storage_class
       }
       service = {
         type = "LoadBalancer"
