@@ -1,5 +1,8 @@
 provider "kubernetes" {
-  config_path = local_file.kube_config.filename
+  host = yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).clusters[0].cluster["server"]
+  cluster_ca_certificate = base64decode(yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).clusters[0].cluster["certificate-authority-data"])
+  client_certificate = base64decode(yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).users[0].user["client-certificate-data"])
+  client_key = base64decode(yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).users[0].user["client-key-data"])
 }
 
 resource "kubernetes_namespace" "aptos" {
@@ -21,7 +24,10 @@ resource "kubernetes_storage_class" "ssd" {
 
 provider "helm" {
   kubernetes {
-    config_path = local_file.kube_config.filename
+    host = yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).clusters[0].cluster["server"]
+    cluster_ca_certificate = base64decode(yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).clusters[0].cluster["certificate-authority-data"])
+    client_certificate = base64decode(yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).users[0].user["client-certificate-data"])
+    client_key = base64decode(yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).users[0].user["client-key-data"])
   }
 }
 
