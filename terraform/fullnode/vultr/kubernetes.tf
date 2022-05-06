@@ -11,17 +11,6 @@ resource "kubernetes_namespace" "aptos" {
   }
 }
 
-resource "kubernetes_storage_class" "ssd" {
-  metadata {
-    name = "ssd"
-  }
-  storage_provisioner = "block.csi.vultr.com"
-  volume_binding_mode = "WaitForFirstConsumer"
-  parameters = {
-    block_type = var.block_storage_type
-  }
-}
-
 provider "helm" {
   kubernetes {
     host = yamldecode(base64decode(vultr_kubernetes.k8.kube_config)).clusters[0].cluster["server"]
