@@ -66,7 +66,7 @@ variable "fullnode_region" {
   default     = "fra"
 }
 
-variable "use_high_perf_block_storage" {
-  description = "High perf block storage is faster but not available in all regions"
-  default = true
+variable "block_storage_type" {
+  description = "High perf block storage is faster but not available in all regions. Either high_perf, storage_opt"
+  default = "storage_opt"
 }
