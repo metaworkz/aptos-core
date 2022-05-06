@@ -15,7 +15,7 @@ resource "kubernetes_storage_class" "ssd" {
   storage_provisioner = "block.csi.vultr.com"
   volume_binding_mode = "WaitForFirstConsumer"
   parameters = {
-    block_type = "high_perf"
+    block_type = var.use_high_perf_block_storage ? "high_perf" : "storage_opt"
   }
 }
 
