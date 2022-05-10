@@ -44,9 +44,6 @@ resource "helm_release" "fullnode" {
       service = {
         type = "LoadBalancer"
       }
-      storage = {
-        size = "100Gi"
-      }
     }),
     jsonencode(var.fullnode_helm_values),
     jsonencode(var.fullnode_helm_values_list == {} ? {} : var.fullnode_helm_values_list[count.index]),
